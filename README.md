@@ -64,14 +64,14 @@ SmartFin Advisor is an AI-powered financial planning assistant that provides use
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/smartfin-advisor.git
+git clone https://github.com/bitan-2125/smartfin-advisor.git
 cd smartfin-advisor
 ```
 
 ### 2. Backend Setup
 
 ```bash
-cd backend
+
 python -m venv venv
 venv\Scripts\activate  # On Windows
 # or
@@ -80,7 +80,7 @@ source venv/bin/activate  # On Mac/Linux
 pip install -r requirements.txt
 ```
 
-- Create a `.env` file in the `backend/` directory and add your NVIDIA API key:
+- Create a `.env` file in the main directory and add your NVIDIA API key:
   ```
   NVIDIA_API_KEY=your_nvidia_api_key_here
   ```
