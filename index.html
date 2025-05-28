@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFin - AI Financial Advisor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+        .chat-container {
+            height: calc(100vh - 250px);
+        }
+        @media (max-width: 768px) {
+            .chat-container {
+                height: calc(100vh - 300px);
+            }
+        }
+        .typing-indicator::after {
+            content: "...";
+            animation: typing 1.5s infinite;
+            display: inline-block;
+            width: 0;
+        }
+        @keyframes typing {
+            0% { width: 0; }
+            50% { width: 0.5em; }
+            100% { width: 1em; }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-2xl"></i>
+                    <h1 class="text-2xl font-bold">SmartFin</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#" class="hover:text-blue-200 transition">Home</a>
+                    <a href="#" class="hover:text-blue-200 transition">About</a>
+                    <a href="#" class="hover:text-blue-200 transition">Services</a>
+                    <button class="bg-white text-blue-600 px-4 py-2 rounded-full font-medium hover:bg-blue-50 transition">
+                        Sign Up
+                    </button>
+                </div>
+                <button class="md:hidden text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="mb-12 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Your Personal AI Financial Advisor</h2>
+                <p class="text-xl text-gray-600 mb-8">Get personalized financial advice tailored to your unique situation and goals.</p>
+                <div class="flex justify-center space-x-4">
+                    <button id="startChatBtn" class="bg-blue-600 text-white px-6 py-3 rounded-full font-medium hover:bg-blue-700 transition shadow-lg">
+                        Start Free Consultation
+                    </button>
+                    <button class="border border-blue-600 text-blue-600 px-6 py-3 rounded-full font-medium hover:bg-blue-50 transition">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Interface (Initially Hidden) -->
+        <div id="chatInterface" class="hidden max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Profile Form -->
+            <div id="profileForm" class="p-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Tell us about your financial situation</h3>
+                <form id="financialProfileForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                            <input type="number" id="age" name="age" min="18" max="100" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="income" class="block text-sm font-medium text-gray-700 mb-1">Monthly Income ($)</label>
+                            <input type="number" id="income" name="income" min="0" step="0.01" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="expenses" class="block text-sm font-medium text-gray-700 mb-1">Monthly Expenses ($)</label>
+                            <input type="number" id="expenses" name="expenses" min="0" step="0.01" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="goal" class="block text-sm font-medium text-gray-700 mb-1">Financial Goal</label>
+                            <input type="text" id="goal" name="goal" required 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="Example: Save for a house down payment">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Risk Appetite</label>
+                            <div class="flex space-x-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="risk" value="Low" class="h-4 w-4 text-blue-600" required>
+                                    <span class="ml-2 text-gray-700">Low</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="risk" value="Medium" class="h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Medium</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="risk" value="High" class="h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">High</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+                            Get Personalized Advice
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Chat Container -->
+            <div id="chatContainer" class="hidden">
+                <div class="border-t border-gray-200">
+                    <div class="chat-container overflow-y-auto p-4 space-y-4" id="chatMessages">
+                        <!-- Messages will appear here -->
+                    </div>
+                    <div class="border-t border-gray-200 p-4 bg-gray-50">
+                        <form id="chatForm" class="flex space-x-2">
+                            <input type="text" id="messageInput" placeholder="Type your question..." 
+                                   class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                            <button type="button" id="resetChatBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section class="my-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">How SmartFin Can Help You</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-piggy-bank text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Savings Optimization</h3>
+                    <p class="text-gray-600">Discover the best ways to save money based on your income and spending habits.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-chart-pie text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Investment Strategies</h3>
+                    <p class="text-gray-600">Get personalized investment recommendations matching your risk tolerance.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-bullseye text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Goal Planning</h3>
+                    <p class="text-gray-600">Create realistic plans to achieve your financial goals with clear timelines.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">SmartFin</h3>
+                    <p class="text-gray-400">Your AI-powered financial advisor helping you make smarter money decisions.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Guides</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Calculators</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition text-xl"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 SmartFin. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const startChatBtn = document.getElementById('startChatBtn');
+            const chatInterface = document.getElementById('chatInterface');
+            const profileForm = document.getElementById('profileForm');
+            const chatContainer = document.getElementById('chatContainer');
+            const financialProfileForm = document.getElementById('financialProfileForm');
+            const chatForm = document.getElementById('chatForm');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const resetChatBtn = document.getElementById('resetChatBtn');
+
+            // Show chat interface when start button is clicked
+            startChatBtn.addEventListener('click', function() {
+                chatInterface.classList.remove('hidden');
+                window.scrollTo({
+                    top: chatInterface.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Handle profile form submission
+            financialProfileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const submitBtn = financialProfileForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing your profile...';
+                submitBtn.disabled = true;
+                
+                // Collect form data
+                const formData = new FormData(financialProfileForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Send to backend
+                fetch('/submit_profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide profile form and show chat
+                    profileForm.classList.add('hidden');
+                    chatContainer.classList.remove('hidden');
+                    
+                    // Add assistant message
+                    addMessage('assistant', data.response);
+                    
+                    // Scroll to bottom
+                    scrollToBottom();
+                })
+$0
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+
+            // Handle chat form submission
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const message = messageInput.value.trim();
+                
+                if (message) {
+                    // Add user message
+                    addMessage('user', message);
+                    messageInput.value = '';
+                    
+                    // Show typing indicator
+                    const typingIndicator = document.createElement('div');
+                    typingIndicator.className = 'flex items-start mb-4 fade-in';
+                    typingIndicator.innerHTML = `
+                        <div class="flex-shrink-0 bg-blue-100 rounded-full p-2 mr-3">
+                            <i class="fas fa-robot text-blue-600"></i>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <div class="typing-indicator">Thinking</div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(typingIndicator);
+                    scrollToBottom();
+                    
+                    // Send to backend
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({ message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remove typing indicator
+                        chatMessages.removeChild(typingIndicator);
+                        
+                        // Add assistant message
+                        addMessage('assistant', data.response);
+                        
+                        // Scroll to bottom
+                        scrollToBottom();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        chatMessages.removeChild(typingIndicator);
+                        addMessage('assistant', "Sorry, I'm having trouble connecting. Please try again later.");
+                    });
+                }
+            });
+
+            // Reset chat
+            resetChatBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to start a new conversation? Your current chat will be lost.')) {
+                    fetch('/reset', {
+                        method: 'POST'
+                    })
+                    .then(() => {
+                        // Clear chat messages
+                        chatMessages.innerHTML = '';
+                        
+                        // Show profile form again
+                        chatContainer.classList.add('hidden');
+                        profileForm.classList.remove('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to reset chat. Please try again.');
+                    });
+                }
+            });
+
+            // Helper function to add a message to the chat
+            function addMessage(role, content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex items-start mb-4 fade-in`;
+                
+                if (role === 'user') {
+                    messageDiv.innerHTML = `
+                        <div class="flex-shrink-0 bg-blue-600 rounded-full p-2 mr-3">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <p class="text-gray-800">${content}</p>
+                        </div>
+                    `;
+                } else {
+                    // Format the assistant's response with line breaks
+                    const formattedContent = content.replace(/\n/g, '<br>');
+                    
+                    messageDiv.innerHTML = `
+                        <div class="flex-shrink-0 bg-blue-100 rounded-full p-2 mr-3">
+                            <i class="fas fa-robot text-blue-600"></i>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded-lg">
+                            <p class="text-gray-800">${formattedContent}</p>
+                        </div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+            }
+
+            // Helper function to scroll to bottom of chat
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Allow pressing Enter to send message (but Shift+Enter for new line)
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
