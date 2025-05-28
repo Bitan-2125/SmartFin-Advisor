@@ -13,24 +13,6 @@ SmartFin Advisor is an AI-powered financial planning assistant that provides use
 
 ---
 
-## Project Structure
-
-```
-smartfin-advisor/
-│
-├── backend/
-│   ├── app.py                # Flask backend with API endpoints
-│   └── requirements.txt      # Backend dependencies
-│
-├── frontend/
-│   └── index.html            # Main frontend (HTML, Tailwind CSS, JS)
-│
-├── .venv/ or myenv/          # Python virtual environment (not included in repo)
-│
-└── docker-compose.yml        # (Optional) For containerized deployment
-```
-
----
 
 ## APIs & Libraries Used
 
