@@ -57,6 +57,24 @@ smartfin-advisor/
 4. **User-Friendly Output:**  
    AI responses are converted from markdown to HTML for clean display in the chat window.
 
+
+---
+
+## DEMO
+
+   ![{6E789F7C-ECE6-4088-B220-C86961CC3BAF}](https://github.com/user-attachments/assets/f85b4e31-b068-4059-8f98-b5e00bd2bf04)
+   ![{63B04BE0-5EF1-49C5-A860-DFFFDD5D0C94}](https://github.com/user-attachments/assets/5b4f53f2-75e0-47d3-96d3-88f88b2e453b)
+   ![{67A89160-7FDC-4F4F-91C4-CA9E290A8CDA}](https://github.com/user-attachments/assets/913dff2b-5dfe-40f0-b9fe-c7a56560fd34)
+   ![{7AA14689-5016-46F3-9D80-BC16686F53CF}](https://github.com/user-attachments/assets/f24ebd5e-2ee5-4e68-a6a3-61d51105feaa)
+   ![{B2F46908-3EFF-4CC8-BEC0-8ED9CA5856B2}](https://github.com/user-attachments/assets/bf51ae6e-f082-485f-8ae5-b9124e475e25)
+   ![{D9962CBB-8BBC-46C6-A593-BABC3AD0E7BE}](https://github.com/user-attachments/assets/56444245-6e49-49f8-8ac7-f95f1f8a0f8d)
+
+
+
+
+
+
+
 ---
 
 ## Setup Instructions
@@ -108,11 +126,7 @@ python app.py
 
 ---
 
-## License
 
-This project is licensed under the MIT License.
-
----
 
 ## Acknowledgements
 
